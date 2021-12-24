@@ -34,7 +34,7 @@
   become: yes
   become_user: "{{ web_user }}"
   shell: >
-    php occ  maintenance:install 
+    php occ maintenance:install 
     --database "mysql"
     --database-host "127.0.0.1:3306" 
     --database-name {{ nc_db }} 

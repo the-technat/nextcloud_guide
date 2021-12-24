@@ -1,5 +1,5 @@
 ---
 nc_passwd: '' # Nextcloud Admin Password
 nc_admin: 'wurm' # Nextcloud Admin User
-nc_webroot: '/var/www/'
+nc_webroot: '/var/www'
 next_archive: 'https://download.nextcloud.com/server/releases/nextcloud-23.0.0.zip'
