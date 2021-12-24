@@ -86,8 +86,8 @@ configure:
     - source venv/bin/activate
 
     # Install dependencies
-    - pip install -r ansible-hetzner-nextcloud/requirements.txt
-    - ansible-galaxy install -r ansible-hetzner-nextcloud/requirements.yml
+    - pip install -r requirements.txt
+    - ansible-galaxy install -r requirements.yml
     - apt update && apt install jq -y
       
     # Setup SSH-Agent using private key from CI/CD variable
@@ -97,7 +97,7 @@ configure:
     - eval $(ssh-agent -s)
     - ssh-add "$ansible_private_key" 
   script:
-  - ansible-playbook ansible-hetzner-nextcloud/nextcloud.yml -v \ 
+  - ansible-playbook nextcloud.yml -v \ 
      -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') \ 
      -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
   only:
