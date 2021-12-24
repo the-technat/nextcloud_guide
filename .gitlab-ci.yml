@@ -42,8 +42,8 @@ validate_ansible:
 plan:
   stage: build
   script:
-  - gitlab-terraform plan
-  - gitlab-terraform plan-json
+  - gitlab-terraform plan -var-file settings.tfvars
+  - gitlab-terraform plan-json -var-file settings.tfvars
   artifacts:
     name: plan
     paths:
@@ -56,7 +56,7 @@ apply:
   dependencies:
     - plan
   script:
-  - gitlab-terraform apply
+  - gitlab-terraform apply -var-file settings.tfvars
   - gitlab-terraform output -no-color -json > tf_output.json
   artifacts:
     name: outputs
