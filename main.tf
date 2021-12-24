@@ -38,7 +38,6 @@ resource "hcloud_volume" "nc_volume" {
 }
 
 resource "hetznerdns_record" "nc_a" {
-  count = var.ipv6_only ? 0 : 1 
   zone_id = data.hetznerdns_zone.dns_zone.id
   name = var.dns_hostname
   value = hcloud_server.nc_instance.ipv4_address

@@ -66,7 +66,7 @@ configure:
     HCLOUD_TOKEN: ${hcloud_token}
   image: docker.io/cytopia/ansible:latest-tools
   before_script:
-    - python -V               # Print out python version for debugging
+    - python -V # Print out python version for debugging
 
     # Install dependencies
     - pip install -r requirements.txt

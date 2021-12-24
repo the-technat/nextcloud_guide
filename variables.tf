@@ -73,12 +73,6 @@ variable "server_backups" {
   default     = false
 }
 
-variable "ipv6_only" {
-  type = bool
-  description = "Do you really need IPv4?"
-  default = true
-}
-
 #----------------
 # Volume Vars
 #----------------
