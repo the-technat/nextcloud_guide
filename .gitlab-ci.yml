@@ -55,7 +55,7 @@ apply:
   dependencies:
     - plan
   script:
-  - gitlab-terraform apply -var-file settings.tfvars
+  - gitlab-terraform apply 
   - gitlab-terraform output -no-color -json > tf_output.json
   artifacts:
     name: outputs
