@@ -1,4 +1,4 @@
 ---
 fqdn: 'elephant.technat.dev'
 nc_passwd: 'happyRabbit' # Nextcloud Admin Password
-nc_user: 'wurm' # Nextcloud Admin User
+nc_admin: 'wurm' # Nextcloud Admin User

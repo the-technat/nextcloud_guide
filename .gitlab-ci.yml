@@ -18,6 +18,7 @@ variables:
 cache:
   paths:
     - ${CI_PROJECT_DIR}/.terraform
+    - /tmp/.ansible/collections
 
 validate_terraform: 
   stage: prepare
