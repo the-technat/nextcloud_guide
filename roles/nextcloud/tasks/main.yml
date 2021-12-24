@@ -12,13 +12,13 @@
 - name: install nextcloud
   unarchive: 
     src: /tmp/nextcloud.tar.bz2
-    dest: "{{ nc_webroot }}"
+    dest: "/var/www"
     remote_src: true
-    creates: "{{ nc_webroot }}/{{ fqdn }}/occ" # only download files when they don't exist
+    creates: "/var/www/nextcloud/occ" # only download files when they don't exist
   notify: restart nginx
 - name: Ensure permissions on webroot
   file:
-    dest: "{{ nc_webroot }}/{{ fqdn }}"
+    dest: "/var/www/nextcloud"
     owner: "{{ web_user }}"
     group: "{{ web_user }}"
     mode: '770'
@@ -44,15 +44,15 @@
     --admin-pass {{ nc_passwd }} 
     --data-dir {{ data_dir }}
   args:
-    chdir: "{{ nc_webroot }}/{{ fqdn }}"
-    creates: "{{ nc_webroot }}/{{ fqdn }}/config/config.php" # Don't run first install wizard when NC is already installed
+    chdir: "/var/www/nextcloud"
+    creates: "/var/www/nextcloud/config/config.php" # Don't run first install wizard when NC is already installed
   register: setup_nc
 - name: nextcloud cronjob present
   cron:
     name: nextcloud cronjob
     minute: '*/5'
     user: "{{ web_user }}" 
-    job: "php -f {{ nc_webroot }}/{{ fqdn }}/cron.php > /dev/null 2>&1"
+    job: "php -f /var/www/nextcloud/cron.php > /dev/null 2>&1"
 
 # - name: set nextcloud domain config.php values
 #   become_user: "{{ web_user[ansible_distribution] }}"
