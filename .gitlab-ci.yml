@@ -101,6 +101,9 @@ configure:
   - ansible-playbook ansible-hetzner-nextcloud/nextcloud.yml -v \ 
      -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') \ 
      -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
+  only:
+  - master
+  allow_failure: false
 
 # Allow for destroy by scheduling the destroy job (after every apply)
 destroy:
