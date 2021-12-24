@@ -5,12 +5,10 @@
   become_user: root
   roles:
   - role: prep_os
-    vars: # lists variables you can set in the role (duplicaete of the role)
-
-  # - mariadb
-  # - redis
-  # - php-fpm
-  # - certbot
+  - mariadb
+  - redis
+  - php-fpm
+  - certbot
   # - nginx
   # - prep_ssmtp
   # - prep_nextcloud
