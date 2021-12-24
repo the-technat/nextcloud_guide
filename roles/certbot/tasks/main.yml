@@ -1,0 +1,22 @@
+---
+- name: certbot is present
+  apt:
+    name:
+    - certbot
+    -  python3-certbot-nginx
+    autoremove: true
+    state: latest
+- name: let's encrypt certificates present
+  shell: "certbot certonly --nginx -m {{ cert_mail }} -d {{ fqdn }} --agree-tos"
+  args:
+    creates: /etc/letsencrypt/live/{{ fqdn }}/cert.pem
+- name: Cert renewal job is present
+  cron:
+    name: letsencrypt cert renewal
+    job: "certbot renew > /var/log/letsencrypt/certbot-renew.log"
+    user: root
+    minute: "0"
+    hour: "*/12"
+    day: "*"
+    weekday: "*"
+    month: "*"

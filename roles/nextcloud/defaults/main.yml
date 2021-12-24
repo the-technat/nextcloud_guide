@@ -1,0 +1,7 @@
+---
+nc_passwd: '' # Nextcloud Admin Password
+nc_user: 'wurm' # Nextcloud Admin User
+nc_db: 'nextcloud'
+nc_db_user: 'nextcloud'
+nc_db_password: ''
+next_archive: 'https://download.nextcloud.com/server/releases/nextcloud-23.0.0.zip'

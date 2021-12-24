@@ -1,0 +1,56 @@
+---
+# Taken from https://github.com/ReinerNippes/nextcloud/blob/master/roles/prep_mariadb/tasks/main.yml
+- name: Ensure PyMySQL is installed
+  pip: 
+    name: PyMySQL
+    state: latest
+- name: Ensure MariaDB is installed
+  apt:
+    name:
+    - mariadb-server
+    update_cache: yes
+    state: latest
+- name: MariaDB Service is enabled and running
+  systemd:
+    name: mariadb
+    enabled: yes
+    state: started
+- name: MariaDB Config dir exists
+  file:
+    name: "{{ mariadb_conf_dir | dirname }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+- name: MariaDB config is present
+  template:
+    src: nextcloud.cnf.j2
+    dest: "{{ mariadb_conf_dir }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart mariadb
+- name: Anonymous user is removed
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_unix_socket: "{{ mariadb_sock_dir }}/mysqld.sock"
+- name: Test DB is removed
+  mysql_db:
+    name: test
+    state: absent
+    login_unix_socket: "{{ mariadb_sock_dir }}/mysqld.sock"
+- name: Nextcloud DB exists
+  mysql_db:
+    name: "{{ nc_db }}"
+    collation: utf8mb4_general_ci
+    encoding: utf8mb4
+    login_unix_socket: "{{ mariadb_sock_dir }}/mysqld.sock"
+- name: Nextcloud DB user exists
+  mysql_user:
+    name:     "{{ nc_db_user }}"
+    password: "{{ lookup('password', '/tmp/passwordfile chars=ascii_letters,digits,punctuation length=20') }}"
+    priv:     "{{ nc_db }}.*:ALL"
+    state: present
+    login_unix_socket: "{{ mariadb_sock_dir }}/mysqld.sock"

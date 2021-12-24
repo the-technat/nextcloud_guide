@@ -1,0 +1,137 @@
+---
+# Taken from https://github.com/ReinerNippes/nextcloud/blob/master/roles/prep_nextcloud/tasks/main.yml
+- name: generate admin passwd if nextcloud_passwd is empty
+  set_fact:
+    nc_passwd: "{{ lookup('password', '{{ credential_store }}/nextcloud_admin_secret chars=ascii_letters,digits length=32') }}"
+  when: nc_passwd == ''
+- name: download nextcloud archive
+  get_url:
+    url:  "{{ next_archive }}"
+    dest: /tmp/nextcloud.tar.bz2
+    checksum: "sha256:{{ next_archive }}.sha256"
+- name: install nextcloud
+  unarchive: 
+    src: /tmp/nextcloud.tar.bz2
+    dest: /var/www
+    remote_src: true
+    creates: /var/www/nextcloud/occ # only download files when they don't exist
+    notify: restart nginx
+- name: Ensure permissions on webroot
+  file:
+    dest: /var/www/nextcloud
+    owner: www-data
+    group: www-data
+    mode: '770'
+    recurse: yes
+- name: Ensure permissions on data dir
+  file:
+    dest: ¨"/data"
+    owner: www-data
+    group: www-data
+    mode: '770'
+    recurse: yes
+- name: first setup nextcloud
+  become: yes
+  become_user: "www-data"
+  shell: >
+    php occ  maintenance:install 
+    --database "mysql"
+    --database-host "127.0.0.1:3306" 
+    --database-name {{ nc_db }} 
+    --database-user {{ nc_db_user }} 
+    --database-pass {{ nc_db_passwd }} 
+    --admin-user {{ nc_admin }} 
+    --admin-pass {{ nc_passwd }} 
+    --data-dir /data
+  args:
+    chdir: /var/www/nextcloud/
+    creates: /var/www/nextcloud/config/config.php # Don't run first install wizard when NC is already installed
+  register: setup_nc
+
+# - name: set nextcloud domain config.php values
+#   become_user: "{{ web_user[ansible_distribution] }}"
+#   become_flags: "{{ ansible_become_flags | default(omit) }}"
+#   become: yes
+#   shell: php occ config:system:set {{ item.key }} {{ item.value }}
+#   args:
+#     chdir: /var/www/nextcloud/
+#   with_items: "{{ nc_config }}"
+
+# - name: set nextcloud mail config.php values
+#   become_user: "{{ web_user[ansible_distribution] }}"
+#   become_flags: "{{ ansible_become_flags | default(omit) }}"
+#   become: yes
+#   shell: php occ config:system:set {{ item.key }} {{ item.value }}
+#   args:
+#     chdir: /var/www/nextcloud/
+#   with_items: "{{ nc_mail_config }}"
+#   when: nc_configure_mail|bool
+
+# - name: copy defaults/config.json to /tmp 
+#   copy:
+#     src: "{{ role_path }}/defaults/config.json"
+#     dest: /tmp/nextcloud.config.json
+#     owner: "{{ web_user[ansible_distribution] }}"
+#     mode: 0600
+    
+# - name: set default config
+#   become_user: "{{ web_user[ansible_distribution] }}"
+#   become_flags: "{{ ansible_become_flags | default(omit) }}"
+#   become: yes
+#   shell: php occ config:import /tmp/nextcloud.config.json
+#   args:
+#     chdir: /var/www/nextcloud/
+#   register: setup_nc
+
+# - name: copy defaults/config.json to /tmp 
+#   file:
+#     name: /tmp/nextcloud.config.json
+#     state: absent
+
+# - debug: var=setup_nc verbosity=2
+
+# - name: backup jobs, upgrade apps and database tuning
+#   become_user: "{{ web_user[ansible_distribution] }}"
+#   become_flags: "{{ ansible_become_flags | default(omit) }}"
+#   become: yes
+#   shell: php occ {{ item }}
+#   args:
+#     chdir: /var/www/nextcloud/
+#   loop:
+#     - background:cron
+#     - upgrade
+#     - db:add-missing-indices
+#     - db:convert-filecache-bigint
+    
+# - name: upgrade nextcloud
+#   become_user: "{{ web_user[ansible_distribution] }}"
+#   become_flags: "{{ ansible_become_flags | default(omit) }}"
+#   become: yes
+#   shell: php occ upgrade
+#   args:
+#     chdir: /var/www/nextcloud/
+
+# - name: adjust app settings
+#   become_user: "{{ web_user[ansible_distribution] }}"
+#   become_flags: "{{ ansible_become_flags | default(omit) }}"
+#   become: yes
+#   shell: php occ app:{{ item.key }} {{ item.value }}
+#   args:
+#     chdir: /var/www/nextcloud/
+#   with_items: "{{ nc_app_config }}"
+
+# - name: add nextcloud cronjob
+#   cron:
+#     name: nextcloud cronjob
+#     minute: '*/5'
+#     user: "{{ web_user[ansible_distribution] }}"
+#     job: "php -f /var/www/nextcloud/cron.php > /dev/null 2>&1"
+  
+# - name: run nextcloud cronjob
+#   become_user: "{{ web_user[ansible_distribution] }}"
+#   become_flags: "{{ ansible_become_flags | default(omit) }}"
+#   become: yes
+#   shell: php -f /var/www/nextcloud/cron.php
+#   args:
+#     chdir: /var/www/nextcloud/
+#   when: setup_nc is changed

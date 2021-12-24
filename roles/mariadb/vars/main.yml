@@ -1,0 +1,2 @@
+mariadb_conf_dir: /etc/mysql/mariadb.conf.d/90-nextcloud.cnf
+mariadb_sock_dir: /var/run/mysqld

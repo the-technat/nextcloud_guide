@@ -1,0 +1,29 @@
+#cloud-config for nextcloud server
+#see "SSH Access" topic in readme
+users:
+- name: ${ansible_user}
+  groups: sudo
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  lock_passwd: True # disable password login
+  gecos: "User for ansible"
+  shell: /bin/bash
+  ssh-authorized_keys:
+  - ${ansible_ssh_key}
+write_files:
+- path: /etc/ssh/sshd_config
+  content: |
+    Port ${ansible_ssh_port}
+    PermitRootLogin no
+    PermitEmptyPasswords no
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+    Include /etc/ssh/sshd_config.d/*.conf  
+    ChallengeResponseAuthentication no
+    UsePAM yes
+    # Allow client to pass locale environment variables
+    AcceptEnv LANG LC_*
+    X11Forwarding no
+    PrintMotd no
+    Subsystem    sftp    /usr/lib/openssh/sftp-server
+runcmd:
+  - systemctl restart sshd

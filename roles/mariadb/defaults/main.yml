@@ -1,0 +1,3 @@
+# database settings
+nc_db: 'nextcloud'
+nc_db_user: 'nextcloud'

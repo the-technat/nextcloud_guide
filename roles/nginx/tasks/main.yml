@@ -1,0 +1,27 @@
+---
+- name: Nginx is present
+  apt:
+    name:
+    - nginx
+    # - python-pip
+    # - python-netaddr
+    autoremove: true
+    state: latest
+- name: Nginx is enabled and started
+  systemd:
+    name:    nginx
+    state:   started
+    enabled: true
+- name: Nginx default virtualhost is absent
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+  notify: restart nginx
+- name: Nextcloud virtualhost is present
+  template:
+    src: nextcloud.j2
+    dest: "/etc/nginx/sites-enabled/{{ fqdn }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx

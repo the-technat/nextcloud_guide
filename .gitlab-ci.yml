@@ -1,0 +1,113 @@
+# Ref: https://docs.gitlab.com/ee/user/infrastructure/iac/terraform_state.html
+
+image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+
+stages:
+  - prepare
+  - build
+  - deploy
+  - destroy
+
+variables:
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/prod
+  TF_VAR_hcloud_token: ${hcloud_token}
+  TF_VAR_hcloud_dns_token: ${hcloud_dns_token}
+  TF_VAR_ssh_key: ${ansible_public_key} # File variable containing the path to the actual key
+  TF_VAR_priv_ssh_key: ${ansible_private_key} # File variable containing the path to the actual key
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+ 
+cache:
+  key: prod
+  paths:
+    - ${CI_PROJECT_DIR}/.terraform
+    - .cache/pip
+    - venv/
+
+validate_terraform: 
+  stage: prepare
+  script:
+  - gitlab-terraform validate
+
+validate_ansible:
+  stage: prepare
+  image: registry.gitlab.com/pipeline-components/ansible-lint:latest
+  script:
+    - ansible-playbook nextcloud.yml --syntax-check
+    - ansible-lint -v --show-relpath --parseable-severity --nocolor . | ansible-lint-junit -o ansible-lint.xml
+  artifacts:
+    when: always
+    reports:
+      junit: ansible-lint.xml
+
+plan:
+  stage: build
+  script:
+  - gitlab-terraform plan
+  - gitlab-terraform plan-json
+  artifacts:
+    name: plan
+    paths:
+    - ${CI_PROJECT_DIR}/plan.cache
+    reports:
+      terraform: ${CI_PROJECT_DIR}/plan.json
+
+apply:
+  stage: deploy
+  dependencies:
+    - plan
+  script:
+  - gitlab-terraform apply
+  - gitlab-terraform output -no-color -json > tf_output.json
+  artifacts:
+    name: outputs
+    paths:
+    - ${CI_PROJECT_DIR}/tf_output.json
+  only:
+  - master
+  allow_failure: false
+
+configure:
+  stage: deploy
+  dependencies:
+    - apply
+  variables:
+    HCLOUD_TOKEN: ${hcloud_token}
+  image:
+    name: python:3-bullseye
+    entrypoint:
+    - /bin/sh
+  before_script:
+    # Avoid annoying security warnings about world-writeable ansible config file
+    - chmod -R 700 ${CI_PROJECT_DIR}
+
+    # Setup venv
+    - python -V               # Print out python version for debugging
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+
+    # Install dependencies
+    - pip install -r ansible-hetzner-nextcloud/requirements.txt
+    - ansible-galaxy install -r ansible-hetzner-nextcloud/requirements.yml
+    - apt update && apt install jq -y
+      
+    # Setup SSH-Agent using private key from CI/CD variable
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - chmod 400 "$ansible_private_key"
+    - eval $(ssh-agent -s)
+    - ssh-add "$ansible_private_key" 
+  script:
+  - ansible-playbook ansible-hetzner-nextcloud/nextcloud.yml -v \ 
+     -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') \ 
+     -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
+
+# Allow for destroy by scheduling the destroy job (after every apply)
+destroy:
+  stage: destroy
+  when: manual
+  script:
+  - gitlab-terraform destroy
+  only:
+  - master
+

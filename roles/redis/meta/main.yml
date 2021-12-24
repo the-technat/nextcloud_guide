@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Nathanael Liechti
+  description: Install and configure Redis cache for nextcloud
+
+  platforms:
+    - name: Debian
+      versions:
+      - 11

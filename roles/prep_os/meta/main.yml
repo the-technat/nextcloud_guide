@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Nathanael Liechti
+  description: Prepare debian server for nextcloud
+
+  platforms:
+    - name: Debian
+      versions:
+      - 11

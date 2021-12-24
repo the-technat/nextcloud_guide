@@ -1,0 +1,1 @@
+php_socket: '/run/php/php{{ php_version }}-fpm.sock'

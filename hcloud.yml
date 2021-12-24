@@ -1,0 +1,6 @@
+---
+# Ansible dynamic inventory
+# Ref: https://docs.ansible.com/ansible/latest/collections/hetzner/hcloud/hcloud_inventory.html
+# Ref: https://docs.ansible.com/ansible/2.3/intro_dynamic_inventory.html
+plugin: hcloud
+label_selector: "configured-by"

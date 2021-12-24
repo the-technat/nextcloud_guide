@@ -1,0 +1,17 @@
+# Nextcloud Playbook Variables
+# This is the settings file for the 'nextcloud.yml' playbook
+# Edit the variables in here before running the playbook
+
+###### MariaDB ######
+
+
+###### Redis ######
+
+
+###### Nginx ###### 
+
+
+###### php-fpm ######
+
+
+###### Nextcloud ######

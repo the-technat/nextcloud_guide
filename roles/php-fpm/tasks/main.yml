@@ -1,0 +1,73 @@
+---
+# Taken from https://github.com/ReinerNippes/nextcloud/blob/master/roles/prep_php/tasks/main.yml
+
+- name: Ensure php gpg key is present
+  apt_key:
+    url: https://packages.sury.org/php/apt.gpg
+    state: present
+- name: Ensure php APT repo is present
+  apt_repository:
+    repo: 'deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main'
+    validate_certs: true
+    update_cache: true
+    state: present
+- name: Ensure php and modules are installed
+  apt:
+    name:
+      - php{{ php_version }}-fpm
+      - php{{ php_version }}-gd
+      - php{{ php_version }}-mysql
+      - php{{ php_version }}-imagick
+      - php{{ php_version }}-curl
+      - php{{ php_version }}-xml
+      - php{{ php_version }}-zip
+      - php{{ php_version }}-intl
+      - php{{ php_version }}-mbstring
+      - php{{ php_version }}-bz2
+      - php{{ php_version }}-ldap
+      - php{{ php_version }}-bcmath  
+      - php{{ php_version }}-gmp
+      - php{{ php_version}}-redis
+      - php-json
+      - libmagickcore-6.q16-6-extra 
+    autoremove: true
+    state: latest
+- name: Ensure php.ini for cli is present
+  template:
+    src: "{{ item.file }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  with_items:
+    - { file: 'cli.php.ini',  dest: '{{ php_cli_conf_dir }}/php.ini' }
+  notify: restart php-fpm
+- name: Ensure php.ini for fpm is present
+  template:
+    src: "{{ item.file }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  with_items:
+    - { file: 'fpm.php.ini',  dest: '{{ php_fpm_conf_dir }}/php.ini' }
+  notify: restart php-fpm
+- name: Ensure php-fpm config and pool are present
+  template:
+    src: "{{ item.file }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  with_items:
+    - { file: 'www.conf',     dest: '{{ php_www_conf_dir }}/www.conf' }
+    - { file: 'php-fpm.conf', dest: '{{ php_fpm_conf_dir }}/php-fpm.conf' }
+  notify: restart php-fpm
+- name: Ensure php-fpm is enabled and running
+  systemd:
+    name: "{{ php_service_name }}"
+    enabled: true
+    state: started

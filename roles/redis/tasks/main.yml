@@ -1,0 +1,27 @@
+---
+# Taken from https://github.com/ReinerNippes/nextcloud/blob/master/roles/prep_redis/tasks/main.yml
+- name: Ensure redis is installed
+  apt:
+    name: redis-server
+    autoremove: true
+    state: latest
+- name: Ensure redis is enabled and running
+  systemd:
+    name: redis
+    enabled: true
+    state: started
+- name: Redis config is present
+  copy:
+    src: redis.conf
+    dest: "{{ redis_conf_path }}/redis.conf"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  notify: restart redis-server
+- name: Ensure php-fpm is allowed to connect to redis
+  user:
+    name: "{{ web_user }}"
+    groups: 
+    - redis
+

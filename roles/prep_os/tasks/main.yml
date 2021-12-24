@@ -1,0 +1,81 @@
+---
+- name: Update package index
+  apt:
+    update_cache: yes
+- name: Ensure base packages are installed
+  apt:
+    name:
+    - zip
+    - unzip
+    - curl
+    - software-properties-common
+    - apt-transport-https
+    - ufw
+    - bash-completion
+    - vim
+    - git
+    - lvm2
+    - parted
+    - python3-pip
+    - gpg
+    - gpg-agent
+    state: latest
+- name: Default deny incoming traffic
+  ufw:
+    direction: incoming
+    default: deny
+- name: Default allow outgoing traffic
+  ufw:
+    direction: outgoing
+    default: allow
+- name: Allow incoming HTTP traffic
+  ufw:
+    rule: allow
+    port: "{{ http_port }}"
+- name: Allow incoming HTTPS traffic
+  ufw:
+    rule: allow
+    port: "{{ https_port }}"
+- name: Allow incoming SSH traffic
+  ufw:
+    rule: allow
+    port: "{{ ssh_port }}"
+- name: UFW firewall enabled
+  community.general.ufw:
+    state: enabled
+- name: Data disk partitioned
+  parted:
+    device: "{{ data_disk }}"
+    number: 1
+    flags: [ lvm ]
+    state: present
+- name: VG nc created
+  lvg:
+    vg: nc
+    pvs: ["{{ data_disk }}1"]
+    pesize: "{{ pesize }}" 
+- name: LV /dev/nc/data created
+  lvol:
+    vg: nc
+    lv:  data
+    size: 1g
+    force: yes
+- name: Mount directory exists
+  file:
+    path: /data
+    state: directory
+    mode: '0770'
+- name: LV formated with ext4
+  filesystem:
+    fstype: ext4
+    dev: /dev/nc/data
+- name: LV mounted at /data
+  mount:
+    path: /data
+    src: /dev/nc/data
+    fstype: ext4
+    state: mounted
+- name: Ensure Timezone is UTC+00:00
+  timezone:
+    name: 'Australia/Currie' # UTC+00:00 
+    hwclock: 'UTC'
