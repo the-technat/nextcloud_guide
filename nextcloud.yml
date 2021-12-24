@@ -3,6 +3,8 @@
   hosts: all # there should be only one server
   become: true
   become_user: root
+  vars_files:
+  - settings.yml
   roles:
   - role: prep_os
   - role: mariadb
