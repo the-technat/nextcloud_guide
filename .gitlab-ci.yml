@@ -12,8 +12,7 @@ variables:
   TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/prod
   TF_VAR_hcloud_token: ${hcloud_token}
   TF_VAR_hcloud_dns_token: ${hcloud_dns_token}
-  TF_VAR_ssh_key: ${ansible_public_key} # File variable containing the path to the actual key
-  TF_VAR_priv_ssh_key: ${ansible_private_key} # File variable containing the path to the actual key
+  TF_VAR_ansible_ssh_key: ${ansible_public_key} # File variable containing the path to the actual key
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
  
 cache:
