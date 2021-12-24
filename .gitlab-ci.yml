@@ -80,6 +80,7 @@ configure:
     # Install dependencies
     - pip install -r requirements.txt
     - ansible-galaxy install -r requirements.yml
+    - apk add --no-cache curl
       
     # Setup SSH-Agent using private key from CI/CD variable
     - mkdir -p ~/.ssh
