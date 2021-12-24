@@ -9,7 +9,7 @@ locals {
 
 resource "hcloud_ssh_key" "ansible_key" {
   name = "Terraform Ansible Key"
-  public_key = file(var.ansible_ssh_key)
+  public_key = var.ansible_ssh_key
 }
 
 resource "hcloud_server" "nc_instance" {
