@@ -16,7 +16,7 @@ resource "hcloud_server" "nc_instance" {
   name        = local.server_name
   server_type = data.hcloud_server_type.server_type.name
   location = data.hcloud_location.server_location.name
-  image       = data.hcoud_image.server_image.name
+  image       = data.hcloud_image.server_image.name
   user_data = local.user_data
   ssh_keys = [hcloud_ssh_key.ansible_key.public_key] # Add the ansible ssh-key as key for root to prevent mails with root passwords 
   backups = var.server_backups
