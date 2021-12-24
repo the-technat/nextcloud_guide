@@ -1,6 +1,4 @@
 output "ipv4_address" {
-  count = var.ipv6_only ? false : true
-
   description = "IPv4 address of Cloud server"
   value       = hcloud_server.nc_instance.ipv4_address
 }

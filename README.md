@@ -41,6 +41,8 @@ If Terraform has provisioned your server, how do you invoke ansible? There are s
 
 ### Preparations
 
+Create a new Repository for your NC instance.
+
 The following CI/CD variables must exist:
 
 - `ansible_private_key`: File containing the private key for ansible
@@ -48,12 +50,9 @@ The following CI/CD variables must exist:
 - `hcloud_dns_token`: Masked variable containing a DNS API token for hetzner dns
 - `hcloud_token`: Masked variable containing an API token for Hetzner Cloud
 
-Then do the following steps:
+Then copy the files from this repository over to your new repository and edit the `settings.tfvars` as well as the `variables.yml` file to your likings.
 
-1 Create a new repository from this one by forking it. Name it like your nextcloud instance
-3 Edit the settings at the top of the `terraform/inf.tf` file to your likings.
-4 Edit the settings in `ansible/vars.yml` to your likings and adjust the name of your nextcloud instance in `ansible/hcloud.yml`.
-5 Commit your changes and see the pipeline building your server
+Once you commit your changes the pipeline should automatically trigger and build your NC instance.
 
 ---  
 
@@ -85,7 +84,7 @@ No modules.
 | [hetznerdns_record.nc_a](https://registry.terraform.io/providers/timohirt/hetznerdns/latest/docs/resources/record) | resource |
 | [hetznerdns_record.nc_aaaa](https://registry.terraform.io/providers/timohirt/hetznerdns/latest/docs/resources/record) | resource |
 | [hcloud_image.server_image](https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/data-sources/image) | data source |
-| [hcloud_location.server_location¨](https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/data-sources/location) | data source |
+| [hcloud_location.server_location](https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/data-sources/location) | data source |
 | [hcloud_server_type.server_type](https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/data-sources/server_type) | data source |
 | [hetznerdns_zone.dns_zone](https://registry.terraform.io/providers/timohirt/hetznerdns/latest/docs/data-sources/zone) | data source |
 
@@ -97,8 +96,8 @@ No modules.
 | <a name="input_ansible_ssh_port"></a> [ansible\_ssh\_port](#input\_ansible\_ssh\_port) | SSH port for Cloud server | `number` | `58222` | no |
 | <a name="input_ansible_user"></a> [ansible\_user](#input\_ansible\_user) | Username for the ansible user | `string` | `"ci"` | no |
 | <a name="input_common_labels"></a> [common\_labels](#input\_common\_labels) | Map of labels to set on resources | `map(string)` | `{}` | no |
-| <a name="input_dns_hostname"></a> [dns\_hostname](#input\_dns\_hostname) | n/a | `string` | n/a | yes |
-| <a name="input_dns_zone"></a> [dns\_zone](#input\_dns\_zone) | n/a | `string` | n/a | yes |
+| <a name="input_dns_hostname"></a> [dns\_hostname](#input\_dns\_hostname) | Hostname of your server¨ | `string` | n/a | yes |
+| <a name="input_dns_zone"></a> [dns\_zone](#input\_dns\_zone) | DNS Zone your Nextcloud server should be in | `string` | n/a | yes |
 | <a name="input_hcloud_dns_token"></a> [hcloud\_dns\_token](#input\_hcloud\_dns\_token) | Hetzner DNS Token for provider | `string` | n/a | yes |
 | <a name="input_hcloud_token"></a> [hcloud\_token](#input\_hcloud\_token) | Hetzner Cloud Token for provider | `string` | n/a | yes |
 | <a name="input_ipv6_only"></a> [ipv6\_only](#input\_ipv6\_only) | Do you really need IPv4? | `bool` | `true` | no |

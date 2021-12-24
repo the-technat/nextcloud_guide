@@ -1,4 +1,4 @@
-data "hcloud_location" "server_location¨" {
+data "hcloud_location" "server_location" {
   name = var.server_location
 }
 

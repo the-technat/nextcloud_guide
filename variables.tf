@@ -15,12 +15,12 @@ variable "hcloud_dns_token" {
 
 variable "dns_zone" {
   type = string
-  descripdescription = "DNS Zone your Nextcloud server should be in"  
+  description = "DNS Zone your Nextcloud server should be in"  
 }
 
 variable "dns_hostname" {
   type = string
-  descrdescription = "Hostname of your server¨"
+  description = "Hostname of your server¨"
 }
 
 variable "ansible_user" {
