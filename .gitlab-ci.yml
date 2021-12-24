@@ -29,14 +29,10 @@ validate_terraform:
 
 validate_ansible:
   stage: prepare
-  image: registry.gitlab.com/pipeline-components/ansible-lint:latest
+  image: docker.io/cytopia/ansible-lint:5
   script:
     - ansible-playbook nextcloud.yml --syntax-check
-    - ansible-lint -v --show-relpath --parseable-severity --nocolor . | ansible-lint-junit -o ansible-lint.xml
-  artifacts:
-    when: always
-    reports:
-      junit: ansible-lint.xml
+    - ansible-lint -v --show-relpath --parseable-severity --nocolor nextcloud.yml 
 
 plan:
   stage: build
@@ -71,11 +67,9 @@ configure:
     - apply
   variables:
     HCLOUD_TOKEN: ${hcloud_token}
-  image:
-    name: python:3-bullseye
-    entrypoint:
-    - /bin/sh
+  image: docker.io/cytopia/ansible:2.8-tools
   before_script:
+    # See https://docs.gitlab.com/ee/ci/caching/#cache-python-dependencies
     # Avoid annoying security warnings about world-writeable ansible config file
     - chmod -R 700 ${CI_PROJECT_DIR}
 
@@ -88,7 +82,6 @@ configure:
     # Install dependencies
     - pip install -r requirements.txt
     - ansible-galaxy install -r requirements.yml
-    - apt update && apt install jq -y
       
     # Setup SSH-Agent using private key from CI/CD variable
     - mkdir -p ~/.ssh
@@ -97,7 +90,9 @@ configure:
     - eval $(ssh-agent -s)
     - ssh-add "$ansible_private_key" 
   script:
-  - "curl -L --silent -o tf_output.json --header \"JOB-TOKEN: $CI_JOB_TOKEN\" \"https://gitlab.com/iet-182/${CI_PROJECT_TITLE}/-/jobs/artifacts/${CI_COMMIT_BRANCH}/raw/tf_output.json?job=apply\""
+  - "curl -L --silent -o tf_output.json --header \"JOB-TOKEN: $CI_JOB_TOKEN\" \"https://gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_TITLE}/-/jobs/artifacts/${CI_COMMIT_BRANCH}/file/tf_output.json?job=apply\""
+  - ls -laH
+  - cat tf_output.json
   - ansible-playbook nextcloud.yml -v -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
   only:
   - master
