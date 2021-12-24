@@ -18,7 +18,7 @@ resource "hcloud_server" "nc_instance" {
   location = data.hcloud_location.server_location.name
   image       = data.hcloud_image.server_image.name
   user_data = local.user_data
-  ssh_keys = [hcloud_ssh_key.ansible_key.public_key] # Add the ansible ssh-key as key for root to prevent mails with root passwords 
+  ssh_keys = [hcloud_ssh_key.ansible_key.id] # Add the ansible ssh-key as key for root to prevent mails with root passwords 
   backups = var.server_backups
   labels =  merge(var.common_labels, {
     "created-by" = "terraform"
