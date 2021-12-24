@@ -14,7 +14,7 @@ output "ipv6_network" {
 }
 
 output "dns_fqdn" {
-  value = concat(var.dns_hostname,".", var.dns_zone)
+  value = "${var.dns_hostname}.${var.dns_zone}"
   description = "Fully qualified domain name of your nextcloud instance"
 }
 

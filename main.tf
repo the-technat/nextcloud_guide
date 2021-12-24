@@ -4,7 +4,7 @@ locals {
     ansible_ssh_port = var.ansible_ssh_port
     ansible_ssh_key = var.ansible_ssh_key
   })
-  server_name = concat(var.dns_hostname, ".", var.dns_zone)
+  server_name = "${var.dns_hostname}.${var.dns_zone}"
 }
 
 resource "hcloud_ssh_key" "ansible_key" {
