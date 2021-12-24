@@ -15,7 +15,7 @@
     dest: "{{ nc_webroot }}"
     remote_src: true
     creates: "{{ nc_webroot }}/{{ fqdn }}/occ" # only download files when they don't exist
-    notify: restart nginx
+  notify: restart nginx
 - name: Ensure permissions on webroot
   file:
     dest: "{{ nc_webroot }}/{{ fqdn }}"
