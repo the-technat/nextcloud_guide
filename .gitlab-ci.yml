@@ -67,7 +67,7 @@ configure:
     - apply
   variables:
     HCLOUD_TOKEN: ${hcloud_token}
-  image: docker.io/cytopia/ansible:2.8-tools
+  image: docker.io/cytopia/ansible:latest-tools
   before_script:
     # See https://docs.gitlab.com/ee/ci/caching/#cache-python-dependencies
 
