@@ -27,7 +27,7 @@
       - php{{ php_version }}-ldap
       - php{{ php_version }}-bcmath  
       - php{{ php_version }}-gmp
-      - php{{ php_version}}-redis
+      - php{{ php_version }}-redis
       - php-json
       - libmagickcore-6.q16-6-extra 
     autoremove: true

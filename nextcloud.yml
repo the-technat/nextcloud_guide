@@ -7,7 +7,7 @@
   - role: prep_os
   - mariadb
   - redis
-  - php-fpm
+  - php_fpm
   - certbot
   # - nginx
   # - prep_ssmtp

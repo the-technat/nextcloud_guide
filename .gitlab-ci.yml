@@ -13,6 +13,7 @@ variables:
   TF_VAR_hcloud_token: ${hcloud_token}
   TF_VAR_hcloud_dns_token: ${hcloud_dns_token}
   TF_VAR_ansible_ssh_key: ${ansible_public_key} 
+  ANSIBLE_CONFIG: ${CI_PROJECT_DIR}/ansible.cfg
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
  
 cache:
