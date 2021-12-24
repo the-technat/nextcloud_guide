@@ -13,3 +13,9 @@
   - role: certbot
   - role: nginx
   - role: nextcloud
+  post_tasks:
+    - name: We are ready
+      debug:
+        msg: 
+          - "Your Nextcloud at https://{{ fqdn }} is ready."
+          - "Login with user: {{ nc_user }} and password: {{ nc_passwd }} "
