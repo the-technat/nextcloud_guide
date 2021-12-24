@@ -17,7 +17,6 @@ variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
  
 cache:
-  key: prod
   paths:
     - ${CI_PROJECT_DIR}/.terraform
     - .cache/pip
@@ -32,7 +31,7 @@ validate_ansible:
   stage: prepare
   image: docker.io/cytopia/ansible-lint:5
   script:
-    - ansible-playbook nextcloud.yml --syntax-check
+    # - ansible-playbook nextcloud.yml --syntax-check
     - ansible-lint -v --show-relpath --parseable-severity --nocolor nextcloud.yml 
 
 plan:
@@ -71,8 +70,6 @@ configure:
   image: docker.io/cytopia/ansible:2.8-tools
   before_script:
     # See https://docs.gitlab.com/ee/ci/caching/#cache-python-dependencies
-    # Avoid annoying security warnings about world-writeable ansible config file
-    - chmod -R 700 ${CI_PROJECT_DIR}
 
     # Setup venv
     - python -V               # Print out python version for debugging
