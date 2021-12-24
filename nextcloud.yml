@@ -5,11 +5,11 @@
   become_user: root
   roles:
   - role: prep_os
-  - mariadb
-  - redis
-  - php_fpm
-  - certbot
-  # - nginx
+  - role: mariadb
+  - role: redis
+  - role: php_fpm
+  - role: certbot
+  - role: nginx
   # - prep_ssmtp
   # - prep_nextcloud
   

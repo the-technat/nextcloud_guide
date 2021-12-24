@@ -100,7 +100,6 @@ No modules.
 | <a name="input_dns_zone"></a> [dns\_zone](#input\_dns\_zone) | DNS Zone your Nextcloud server should be in | `string` | n/a | yes |
 | <a name="input_hcloud_dns_token"></a> [hcloud\_dns\_token](#input\_hcloud\_dns\_token) | Hetzner DNS Token for provider | `string` | n/a | yes |
 | <a name="input_hcloud_token"></a> [hcloud\_token](#input\_hcloud\_token) | Hetzner Cloud Token for provider | `string` | n/a | yes |
-| <a name="input_ipv6_only"></a> [ipv6\_only](#input\_ipv6\_only) | Do you really need IPv4? | `bool` | `true` | no |
 | <a name="input_server_backups"></a> [server\_backups](#input\_server\_backups) | Enable server backups if needed | `bool` | `false` | no |
 | <a name="input_server_image"></a> [server\_image](#input\_server\_image) | Image to use for the Cloud server | `string` | `"debian-11"` | no |
 | <a name="input_server_location"></a> [server\_location](#input\_server\_location) | Location where your Cloud server should be located | `string` | `"hel1"` | no |
