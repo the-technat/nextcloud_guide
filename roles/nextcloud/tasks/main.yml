@@ -1,9 +1,9 @@
 ---
 # Taken from https://github.com/ReinerNippes/nextcloud/blob/master/roles/prep_nextcloud/tasks/main.yml
-- name: generate admin passwd if nextcloud_passwd is empty
-  set_fact:
-    nc_passwd: "{{ lookup('password', '{{ credential_store }}/nextcloud_admin_secret chars=ascii_letters,digits length=32') }}"
-  when: nc_passwd == ''
+# - name: generate admin passwd if nextcloud_passwd is empty
+#   set_fact:
+#     nc_passwd: "{{ lookup('password', '{{ credential_store }}/nextcloud_admin_secret chars=ascii_letters,digits length=32') }}"
+#   when: nc_passwd == ''
 - name: download nextcloud archive
   get_url:
     url:  "{{ next_archive }}"
@@ -12,41 +12,47 @@
 - name: install nextcloud
   unarchive: 
     src: /tmp/nextcloud.tar.bz2
-    dest: /var/www
+    dest: "{{ nc_webroot }}/"
     remote_src: true
-    creates: /var/www/nextcloud/occ # only download files when they don't exist
+    creates: "{{ nc_webroot }}/occ" # only download files when they don't exist
     notify: restart nginx
 - name: Ensure permissions on webroot
   file:
-    dest: /var/www/nextcloud
-    owner: www-data
-    group: www-data
+    dest: "{{ nc_webroot }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
     mode: '770'
     recurse: yes
 - name: Ensure permissions on data dir
   file:
-    dest: ¨"/data"
-    owner: www-data
-    group: www-data
+    dest: ¨"{{ data_dir }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
     mode: '770'
     recurse: yes
 - name: first setup nextcloud
   become: yes
-  become_user: "www-data"
+  become_user: "{{ web_user }}"
   shell: >
     php occ  maintenance:install 
     --database "mysql"
     --database-host "127.0.0.1:3306" 
     --database-name {{ nc_db }} 
     --database-user {{ nc_db_user }} 
-    --database-pass {{ nc_db_passwd }} 
+    --database-pass {{ nc_db_password }} 
     --admin-user {{ nc_admin }} 
     --admin-pass {{ nc_passwd }} 
-    --data-dir /data
+    --data-dir {{ data_dir }}
   args:
-    chdir: /var/www/nextcloud/
-    creates: /var/www/nextcloud/config/config.php # Don't run first install wizard when NC is already installed
+    chdir: "{{ nc_webroot }}"
+    creates: "{{ nc_webroot }}/config/config.php" # Don't run first install wizard when NC is already installed
   register: setup_nc
+- name: nextcloud cronjob present
+  cron:
+    name: nextcloud cronjob
+    minute: '*/5'
+    user: "{{ web_user }}" 
+    job: "php -f {{ nc_webroot }}/cron.php > /dev/null 2>&1"
 
 # - name: set nextcloud domain config.php values
 #   become_user: "{{ web_user[ansible_distribution] }}"
@@ -120,12 +126,7 @@
 #     chdir: /var/www/nextcloud/
 #   with_items: "{{ nc_app_config }}"
 
-# - name: add nextcloud cronjob
-#   cron:
-#     name: nextcloud cronjob
-#     minute: '*/5'
-#     user: "{{ web_user[ansible_distribution] }}"
-#     job: "php -f /var/www/nextcloud/cron.php > /dev/null 2>&1"
+
   
 # - name: run nextcloud cronjob
 #   become_user: "{{ web_user[ansible_distribution] }}"

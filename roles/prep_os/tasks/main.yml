@@ -71,7 +71,7 @@
     dev: /dev/nc/data
 - name: LV mounted at /data
   mount:
-    path: /data
+    path: "{{ data_dir }}"
     src: /dev/nc/data
     fstype: ext4
     state: mounted

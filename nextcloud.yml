@@ -12,6 +12,4 @@
   - role: php_fpm
   - role: certbot
   - role: nginx
-  # - prep_ssmtp
-  # - prep_nextcloud
-  
+  - role: nextcloud
