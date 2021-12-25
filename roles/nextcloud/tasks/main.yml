@@ -76,7 +76,7 @@
   shell: php occ config:system:set {{ item.key }} {{ item.value }}
   args:
     chdir: /var/www/nextcloud/
-  with_items: "{{ nc_config }}"
+  with_dict: "{{ nc_config }}"
   notify: restart nginx
 
 # - name: set nextcloud mail config.php values
