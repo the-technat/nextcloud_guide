@@ -69,7 +69,7 @@
     name: nextcloud cronjob
     minute: '*/5'
     user: "{{ web_user }}" 
-    job: "php -f /var/www/nextcloud/cron.php > /dev/null 2>&1"
+    job: 'php -f /var/www/nextcloud/cron.php > /dev/null 2>&1'
 - name: Nextcloud config keys set
   become_user: "{{ web_user }}"
   become: yes
