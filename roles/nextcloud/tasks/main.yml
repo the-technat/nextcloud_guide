@@ -29,7 +29,16 @@
     group: "{{ web_user }}"
     mode: '770'
     recurse: yes
-- name: first setup nextcloud
+- name: Verify if Nextcloud is installed
+  become: yes
+  become_user: "{{ web_user }}"
+  register: install_status
+  shell: >
+    php occ status 
+  changed_when: true != true
+  args:
+    chdir: "/var/www/nextcloud"
+- name: Install Nextcloud if not installed
   become: yes
   become_user: "{{ web_user }}"
   shell: >
@@ -42,9 +51,9 @@
     --admin-user {{ nc_admin }} 
     --admin-pass {{ nc_passwd }} 
     --data-dir {{ data_dir }}
+  when: 'install_status.stdout.find("installed: false") != -1'
   args:
     chdir: "/var/www/nextcloud"
-    creates: "/var/www/nextcloud/config/config.php" # Don't run first install wizard when NC is already installed
   register: setup_nc
   notify: restart nginx
 - name: nextcloud cronjob present
