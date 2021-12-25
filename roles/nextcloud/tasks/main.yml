@@ -15,7 +15,7 @@
 - name: Gather Nextcloud config
   become: yes
   become_user: "{{ web_user }}"
-  register: nc_config
+  register: nc_gugus
   shell: php occ config:list --output=json 
   changed_when: true != true
   args:
@@ -76,7 +76,7 @@
   shell: php occ config:system:set {{ item.key }} {{ item.value }}
   args:
     chdir: /var/www/nextcloud/
-  with_dict: "{{ nc_config }}"
+  with_items: "{{ nc_config }}"
   notify: restart nginx
 
 # - name: set nextcloud mail config.php values
