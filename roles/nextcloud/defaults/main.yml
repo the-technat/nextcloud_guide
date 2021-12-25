@@ -7,9 +7,9 @@ nc_config:
   - { key: "trusted_domains", value: '1 --value={{ fqdn }}' }
   - { key: "default_phone_region", value: '--value=CH' }
   - { key: "mysql.utf8mb4", value: '--value=true' }
-  - { key: "memcache.locking", value: '--value=\OC\Memcache\Redis' }
-  - { key: "memcache.local", value: '--value=\OC\Memcache\Redis' }
-  - { key: "memcache.distributed", value: '--value=\OC\Memcache\Redis' }
+  - { key: "memcache.locking", value: '--value=\\OC\\Memcache\\Redis' }
+  - { key: "memcache.local", value: '--value=\\OC\\Memcache\\Redis' }
+  - { key: "memcache.distributed", value: '--value=\\OC\\Memcache\\Redis' }
   - { key: "redis", value: 'host --value=/var/run/redis/redis.sock' }
   - { key: "redis", value: 'port --value=0' }
   - { key: "redis", value: 'dbindex --value=0' }
