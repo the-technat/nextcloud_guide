@@ -25,7 +25,7 @@
     recurse: yes
 - name: Ensure permissions on data dir
   file:
-    dest: ¨"{{ data_dir }}"
+    dest: "{{ data_dir }}"
     owner: "{{ web_user }}"
     group: "{{ web_user }}"
     mode: '770'
