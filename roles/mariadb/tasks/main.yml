@@ -50,7 +50,7 @@
 - name: Nextcloud DB user exists
   mysql_user:
     name:     "{{ nc_db_user }}"
-    password: "{{ lookup('password', '/tmp/passwordfile chars=ascii_letters,digits,punctuation length=20') }}"
+    password: "{{ nc_db_password }}"
     priv:     "{{ nc_db }}.*:ALL"
     state: present
     login_unix_socket: "{{ mariadb_sock_dir }}/mysqld.sock"
