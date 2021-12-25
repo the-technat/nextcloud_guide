@@ -47,6 +47,8 @@ The following CI/CD variables must exist:
 
 - `ansible_private_key`: File containing the private key for ansible
 - `ansible_public_key`: File containing the public key for ansible
+- `nc_passwd`: Masked variable containing the Admin Password for your nextcloud user
+- `nc_db_password`: Masked variable containing the DB Password for your nextcloud
 - `hcloud_dns_token`: Masked variable containing a DNS API token for hetzner dns
 - `hcloud_token`: Masked variable containing an API token for Hetzner Cloud
 

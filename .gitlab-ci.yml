@@ -82,7 +82,7 @@ configure:
     - ssh-add "$ansible_private_key" 
   script:
   - "curl -L --silent -o tf_output.json --header \"JOB-TOKEN: $CI_JOB_TOKEN\" \"https://gitlab.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_TITLE}/-/jobs/artifacts/${CI_COMMIT_BRANCH}/file/tf_output.json?job=apply\""
-  - ansible-playbook nextcloud.yml -v -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
+  - ansible-playbook nextcloud.yml -v -e nc_passwd=${nc_passwd} -e nc_db_password=${nc_db_password} -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
   only:
   - master
   allow_failure: false
