@@ -18,4 +18,9 @@
       debug:
         msg: 
           - "Your Nextcloud at https://{{ fqdn }} is ready."
-          - "Login with user: {{ nc_user }} and password: {{ nc_passwd }} "
+          - "Login with user: {{ nc_admin }} and password: {{ nc_passwd }} "
+          - "Environment:"
+          - "  DB Name: {{ nc_db }}"
+          - "  DB User: ¨{{ nc_db_user }}"
+          - "  Data Dir: {{ data_dir }}"
+          - "  OS: {{ ansible_distribution }}"
