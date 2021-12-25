@@ -1,6 +1,6 @@
 # source: https://docs.nextcloud.com/server/latest/admin_manual/installation/nginx.html
 upstream php-handler {
-    server unix:/var/run/php8.0-fpm-nextcloud.sock;
+    server unix:{{ php_fpm_sock }};
 }
 
 server {

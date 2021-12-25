@@ -15,7 +15,6 @@
     dest: "/var/www"
     remote_src: true
     creates: "/var/www/nextcloud/occ" # only download files when they don't exist
-  notify: restart nginx
 - name: Ensure permissions on webroot
   file:
     dest: "/var/www/nextcloud"
@@ -47,6 +46,7 @@
     chdir: "/var/www/nextcloud"
     creates: "/var/www/nextcloud/config/config.php" # Don't run first install wizard when NC is already installed
   register: setup_nc
+  notify: restart nginx
 - name: nextcloud cronjob present
   cron:
     name: nextcloud cronjob
