@@ -44,7 +44,7 @@
   shell: >
     php occ maintenance:install 
     --database "mysql"
-    --database-host "127.0.0.1:3306" 
+    --database-host "localhost:3306" 
     --database-name {{ nc_db }} 
     --database-user {{ nc_db_user }} 
     --database-pass {{ nc_db_password }} 
