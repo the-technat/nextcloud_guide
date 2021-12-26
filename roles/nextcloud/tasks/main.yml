@@ -4,6 +4,31 @@
 #   set_fact:
 #     nc_passwd: "{{ lookup('password', '{{ credential_store }}/nextcloud_admin_secret chars=ascii_letters,digits length=32') }}"
 #   when: nc_passwd == ''
+- name: Download Nextcloud Archive 
+  get_url:
+    url:  "{{ next_archive }}"
+    dest: /tmp/nextcloud.tar.bz2
+    checksum: "sha256:{{ next_archive }}.sha256"
+- name: Ensure Nextcloud files are present
+  unarchive: 
+    src: /tmp/nextcloud.tar.bz2
+    dest: "/var/www"
+    remote_src: true
+    creates: /var/www/nextcloud/occ
+- name: Ensure permissions on webroot
+  file:
+    dest: "/var/www/nextcloud"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: '770'
+    recurse: yes
+- name: Ensure permissions on data dir
+  file:
+    dest: "{{ data_dir }}"
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: '770'
+    recurse: yes
 - name: Verify if Nextcloud is installed
   become: yes
   become_user: "{{ web_user }}"
@@ -20,32 +45,6 @@
   changed_when: true != true
   args:
     chdir: /var/www/nextcloud
-- name: Ensure permissions on webroot
-  file:
-    dest: "/var/www/nextcloud"
-    owner: "{{ web_user }}"
-    group: "{{ web_user }}"
-    mode: '770'
-    recurse: yes
-- name: Ensure permissions on data dir
-  file:
-    dest: "{{ data_dir }}"
-    owner: "{{ web_user }}"
-    group: "{{ web_user }}"
-    mode: '770'
-    recurse: yes
-- name: Download Nextcloud Archive 
-  get_url:
-    url:  "{{ next_archive }}"
-    dest: /tmp/nextcloud.tar.bz2
-    checksum: "sha256:{{ next_archive }}.sha256"
-  when: 'install_status.stdout.find("installed: false") != -1'
-- name: Ensure Nextcloud files are present
-  unarchive: 
-    src: /tmp/nextcloud.tar.bz2
-    dest: "/var/www"
-    remote_src: true
-  when: 'install_status.stdout.find("installed: false") != -1'
 - name: Install Nextcloud
   become: yes
   become_user: "{{ web_user }}"
@@ -64,12 +63,6 @@
     chdir: "/var/www/nextcloud"
   register: setup_nc
   notify: restart nginx
-- name: Nextcloud cronjob registered 
-  cron:
-    name: nextcloud cronjob
-    minute: '*/5'
-    user: "{{ web_user }}" 
-    job: 'php -f /var/www/nextcloud/cron.php > /dev/null 2>&1'
 - name: Nextcloud config keys set
   become_user: "{{ web_user }}"
   become: yes
@@ -78,6 +71,12 @@
     chdir: /var/www/nextcloud/
   with_items: "{{ nc_config }}"
   notify: restart nginx
+- name: Nextcloud cronjob registered 
+  cron:
+    name: nextcloud cronjob
+    minute: '*/5'
+    user: "{{ web_user }}" 
+    job: 'php -f /var/www/nextcloud/cron.php > /dev/null 2>&1'
 
 # - name: set nextcloud mail config.php values
 #   become_user: "{{ web_user[ansible_distribution] }}"
