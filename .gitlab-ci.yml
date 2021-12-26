@@ -92,7 +92,7 @@ destroy:
   stage: destroy
   when: manual
   script:
-  - gitlab-terraform destroy
+  - gitlab-terraform destroy -var-file settings.tfvars
   only:
   - master
 
