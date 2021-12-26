@@ -67,6 +67,7 @@ There is always a way to improve:
 [] Run Nextcloud upgrades if necessary
 [] Run NC App upgrades if necessary
 [] Configure backup solution to s3 with configurable endpoint
+[] Restore data, db and webroot when server has to be recreated by pulling the latest backup after server recreation
 
 ---  
 
