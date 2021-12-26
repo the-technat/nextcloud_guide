@@ -37,17 +37,9 @@
   become_user: "{{ web_user }}"
   register: install_status
   shell: php occ status 
-  changed_when: true != true
+  changed_when: false # task only checks something, doesn't run an action
   args:
     chdir: "/var/www/nextcloud"
-- name: Gather Nextcloud config
-  become: yes
-  become_user: "{{ web_user }}"
-  register: nc_gugus
-  shell: php occ config:list --output=json 
-  changed_when: true != true
-  args:
-    chdir: /var/www/nextcloud
 - name: Install Nextcloud
   become: yes
   become_user: "{{ web_user }}"
@@ -66,11 +58,14 @@
     chdir: "/var/www/nextcloud"
   register: setup_nc
   notify: restart nginx
-- name: restart redis # redis needs a restart to populate it's socket
-  systemd:
-    name: redis
-    state: restarted
-  when: 'install_status.stdout.find("installed: false") != -1'
+- name: Gather Nextcloud config
+  become: yes
+  become_user: "{{ web_user }}"
+  register: nc_gugus
+  shell: php occ config:list --output=json 
+  changed_when: false # task only reads something, doesn't run an action
+  args:
+    chdir: /var/www/nextcloud
 - name: Nextcloud config keys set
   become_user: "{{ web_user }}"
   become: yes
