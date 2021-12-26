@@ -58,20 +58,27 @@
     chdir: "/var/www/nextcloud"
   register: setup_nc
   notify: restart nginx
+- name: Gather Nextcloud config
+  become: yes
+  become_user: "{{ web_user }}"
+  register: nc_config
+  shell: php occ config:list --output=json 
+  changed_when: false # task only reads something, doesn't run an action
+  args:
+    chdir: /var/www/nextcloud
 - name: Nextcloud cronjob registered 
   cron:
     name: nextcloud cronjob
     minute: '*/5'
     user: "{{ web_user }}" 
     job: 'php -f /var/www/nextcloud/cron.php > /dev/null 2>&1'
-# - name: Gather Nextcloud config
-#   become: yes
-#   become_user: "{{ web_user }}"
-#   register: nc_gugus
-#   shell: php occ config:list --output=json 
-#   changed_when: false # task only reads something, doesn't run an action
-#   args:
-#     chdir: /var/www/nextcloud
+- name: Set background jobs to cron
+  become: yes
+  become_user: "{{ web_user }}"
+  shell: php occ background:cron
+  args:
+    chdir: "/var/www/nextcloud/"
+  when: nc_config.stdout.json.apps.core.backgroundjobs_mode != "cron"
 - name: config.json templated and ready
   template:
     src: config.json.j2
@@ -86,55 +93,17 @@
   args:
     chdir: "/var/www/nextcloud"
   register: nc_config_import
+  notify: restart redis
 - name: config.json removed from tmp
   file:
     name: /tmp/nextcloud.config.json
     state: absent
-
-# - name: restart redis # redis needs a restart to populate it's socket
-#   systemd:
-#     name: redis
-#     state: restarted
-#   when: 'install_status.stdout.find("installed: false") != -1'
-
-
-# - name: backup jobs, upgrade apps and database tuning
-#   become_user: "{{ web_user[ansible_distribution] }}"
-#   become_flags: "{{ ansible_become_flags | default(omit) }}"
-#   become: yes
-#   shell: php occ {{ item }}
-#   args:
-#     chdir: /var/www/nextcloud/
-#   loop:
-#     - background:cron
-#     - upgrade
-#     - db:add-missing-indices
-#     - db:convert-filecache-bigint
-    
-# - name: upgrade nextcloud
-#   become_user: "{{ web_user[ansible_distribution] }}"
-#   become_flags: "{{ ansible_become_flags | default(omit) }}"
-#   become: yes
-#   shell: php occ upgrade
-#   args:
-#     chdir: /var/www/nextcloud/
-
-# - name: adjust app settings
-#   become_user: "{{ web_user[ansible_distribution] }}"
-#   become_flags: "{{ ansible_become_flags | default(omit) }}"
-#   become: yes
-#   shell: php occ app:{{ item.key }} {{ item.value }}
-#   args:
-#     chdir: /var/www/nextcloud/
-#   with_items: "{{ nc_app_config }}"
-
-
-  
-# - name: run nextcloud cronjob
-#   become_user: "{{ web_user[ansible_distribution] }}"
-#   become_flags: "{{ ansible_become_flags | default(omit) }}"
-#   become: yes
-#   shell: php -f /var/www/nextcloud/cron.php
-#   args:
-#     chdir: /var/www/nextcloud/
-#   when: setup_nc is changed
+- name: run DB migration jobs
+  become: yes
+  become_user: "{{ web_user }}"
+  shell: php occ {{ item }}
+  args:
+    chdir: "/var/www/nextcloud/"
+  loop:
+  - db:add-missing-indices 
+  - db:convert-filecach-bigint

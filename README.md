@@ -56,6 +56,18 @@ Then copy the files from this repository over to your new repository and edit th
 
 Once you commit your changes the pipeline should automatically trigger and build your NC instance.
 
+## To Do
+
+There is always a way to improve:
+
+[] Improve secrets management  
+[] Refine `config.json` and add more configuration values
+[] Make sure ansible only imports the config when values have changed
+[] Install nextcloud apps using a list variable
+[] Run Nextcloud upgrades if necessary
+[] Run NC App upgrades if necessary
+[] Configure backup solution to s3 with configurable endpoint
+
 ---  
 
 ## Terraform specifications

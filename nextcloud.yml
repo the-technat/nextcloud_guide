@@ -21,7 +21,7 @@
           - "Login with user: {{ nc_admin }} and password: {{ nc_passwd }} "
           - "Environment:"
           - "  DB Name: {{ nc_db }}"
-          - "  DB User: ¨{{ nc_db_user }}"
+          - "  DB User: {{ nc_db_user }}" 
           - "  Webroot: /var/www/nextcloud"
           - "  PHP Version: {{ php_version }}"
           - "  PHP-FPM Socket: {{ php_fpm_sock }}"

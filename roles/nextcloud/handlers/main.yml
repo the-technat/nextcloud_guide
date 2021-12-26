@@ -3,3 +3,7 @@
   systemd:
     name: nginx
     state: restarted
+- name: restart redis
+  systemd:
+    name: redis
+    state: restarted
