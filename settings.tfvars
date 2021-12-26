@@ -1,5 +1,5 @@
 dns_zone = "technat.dev"
-dns_hostname = "elephant"
+dns_hostname = "buffalo"
 ansible_user = "ci"
 ansible_ssh_port = 58222
 server_type = "cx11"
