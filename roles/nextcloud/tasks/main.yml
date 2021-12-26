@@ -66,6 +66,11 @@
   changed_when: false # task only reads something, doesn't run an action
   args:
     chdir: /var/www/nextcloud
+- name: restart redis # redis needs a restart to populate it's socket
+  systemd:
+    name: redis
+    state: restarted
+  when: 'install_status.stdout.find("installed: false") != -1'
 - name: Nextcloud config keys set
   become_user: "{{ web_user }}"
   become: yes
