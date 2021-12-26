@@ -35,7 +35,7 @@ If you want Ansible to use an other user than `root` to confiure your server you
 
 ## Ansilbe invocation
 
-If Terraform has provisioned your server, how do you invoke ansible? There are several ways how you can connect them, the simplest of them would be to have some sort of CI/CD pipeline that gathers the outputs of terraform and configures ansible with them. In this repo we are using [Terraform Provisioners](https://www.terraform.io/language/resources/provisioners) to run the playbook against the server.
+If Terraform has provisioned your server, how do you invoke ansible? This repo solves this by defining some Terraform outputs. Outputs are variables that can be exported in a JSON format after an apply ran has finished. Thus we can export the connection settings from Terraform and pass them over to ansible using a Json processor.
 
 ## Usage
 

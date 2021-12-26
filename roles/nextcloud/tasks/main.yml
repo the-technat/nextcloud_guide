@@ -78,7 +78,7 @@
   shell: php occ background:cron
   args:
     chdir: "/var/www/nextcloud/"
-  when: nc_config.stdout.json.apps.core.backgroundjobs_mode != "cron"
+  when: nc_config.stdout|from_json|json_query('apps.core.backgroundjobs_mode') != "cron"
 - name: config.json templated and ready
   template:
     src: config.json.j2
