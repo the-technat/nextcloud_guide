@@ -22,6 +22,7 @@
     group: "{{ web_user }}"
     mode: '770'
     recurse: yes
+  notify: restart nginx
 - name: Ensure permissions on data dir
   file:
     dest: "{{ data_dir }}"
@@ -29,6 +30,8 @@
     group: "{{ web_user }}"
     mode: '770'
     recurse: yes
+- name: Flush handlers
+  meta: flush_handlers
 - name: Verify if Nextcloud is installed
   become: yes
   become_user: "{{ web_user }}"
@@ -63,6 +66,11 @@
     chdir: "/var/www/nextcloud"
   register: setup_nc
   notify: restart nginx
+- name: restart redis # redis needs a restart to populate it's socket
+  systemd:
+    name: redis
+    state: restarted
+  when: 'install_status.stdout.find("installed: false") != -1'
 - name: Nextcloud config keys set
   become_user: "{{ web_user }}"
   become: yes
