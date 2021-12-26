@@ -106,4 +106,4 @@
     chdir: "/var/www/nextcloud/"
   loop:
   - db:add-missing-indices 
-  - db:convert-filecach-bigint
+  - db:convert-filecache-bigint

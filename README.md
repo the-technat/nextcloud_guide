@@ -60,14 +60,14 @@ Once you commit your changes the pipeline should automatically trigger and build
 
 There is always a way to improve:
 
-- [] Improve secrets management  
-- [] Refine `config.json` and add more configuration values
-- [] Make sure ansible only imports the config when values have changed
-- [] Install nextcloud apps using a list variable
-- [] Run Nextcloud upgrades if necessary
-- [] Run NC App upgrades if necessary
-- [] Configure backup solution to s3 with configurable endpoint
-- [] Restore data, db and webroot when server has to be recreated by pulling the latest backup after server recreation
+- [ ] Improve secrets management  
+- [ ] Refine `config.json` and add more configuration values
+- [ ] Make sure ansible only imports the config when values have changed
+- [ ] Install nextcloud apps using a list variable
+- [ ] Run Nextcloud upgrades if necessary
+- [ ] Run NC App upgrades if necessary
+- [ ] Configure backup solution to s3 with configurable endpoint
+- [ ] Restore data, db and webroot when server has to be recreated by pulling the latest backup after server recreation
 
 ---  
 
