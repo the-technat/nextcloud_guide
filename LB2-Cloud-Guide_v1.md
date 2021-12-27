@@ -674,7 +674,7 @@ Source: <https://www.debiantutorials.com/installing-ssmtp-mta-mail-transfer-agen
 
 #### 2FA
 
-Install from app store: Two-Factor Gateway, Two-Factor TOTP Provider
+Install from app store: Two-Factor TOTP Provider
 
 Enfore 2FA: true Enforced for groups: admin Not enforced for groups: none
 
