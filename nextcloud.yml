@@ -29,4 +29,4 @@
           - "  Data Dir: {{ data_dir }}"
           - "  OS: {{ ansible_distribution }}"
           - "  SSH-Port: {{ ssh_port }}"
-          - "  Fail2Ban Logs: {{ fail2ban_log_path }}"
+          - "  Nextcloud Logs: {{ data_dir }}/nextcloud.log"

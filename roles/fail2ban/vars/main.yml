@@ -1,2 +1,0 @@
----
-fail2ban_log_path: '/var/log/fail2ban/nextcloud.log'
