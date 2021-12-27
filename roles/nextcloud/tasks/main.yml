@@ -79,13 +79,6 @@
   args:
     chdir: "/var/www/nextcloud/"
   when: nc_config.stdout|from_json|json_query('apps.core.backgroundjobs_mode') != "cron"
-- name: Install nextcloud apps 
-  become: yes
-  become_user: "{{ web_user }}"
-  shell: php occ app:install {{ item }}
-  args:
-    chdir: "/var/www/nextcloud/"
-  loop: "{{ nc_apps }}"
 - name: config.json templated and ready
   template:
     src: config.json.j2
