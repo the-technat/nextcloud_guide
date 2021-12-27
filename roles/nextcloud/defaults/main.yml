@@ -2,4 +2,4 @@
 nc_passwd: '' # Nextcloud Admin Password
 nc_admin: 'wurm' # Nextcloud Admin User
 next_archive: 'https://download.nextcloud.com/server/releases/nextcloud-23.0.0.zip'
-nc_apps: ["twofactor_totp", "geoblocker"]
+nc_apps: ["twofactor_totp"]

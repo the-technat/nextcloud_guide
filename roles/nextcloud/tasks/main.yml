@@ -85,7 +85,7 @@
   shell: php occ app:install {{ item }}
   args:
     chdir: "/var/www/nextcloud/"
-  loop: nc_apps
+  loop: "{{ nc_apps }}"
 - name: config.json templated and ready
   template:
     src: config.json.j2

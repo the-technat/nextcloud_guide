@@ -7,6 +7,7 @@
   - settings.yml
   roles:
   - role: prep_os
+  - role: fail2ban
   - role: mariadb
   - role: redis
   - role: php_fpm
@@ -17,8 +18,8 @@
     - name: We are ready
       debug:
         msg: 
-          - "Your Nextcloud at https://{{ fqdn }} is ready."
-          - "Login with user: {{ nc_admin }} and password: {{ nc_passwd }} "
+          - "Your Nextcloud at https://{{ fqdn }}:{{ https_port }} is ready."
+          - "Login with user: {{ nc_admin }}"
           - "Environment:"
           - "  DB Name: {{ nc_db }}"
           - "  DB User: {{ nc_db_user }}" 
@@ -27,3 +28,5 @@
           - "  PHP-FPM Socket: {{ php_fpm_sock }}"
           - "  Data Dir: {{ data_dir }}"
           - "  OS: {{ ansible_distribution }}"
+          - "  SSH-Port: {{ ssh_port }}"
+          - "  Fail2Ban Logs: {{ fail2ban_log_path }}"

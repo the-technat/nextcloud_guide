@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Nathanael Liechti
+  description: Configure fail2ban on Debian Server
+
+  platforms:
+    - name: Debian
+      versions:
+      - 11
