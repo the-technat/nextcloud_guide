@@ -47,12 +47,18 @@ The following CI/CD variables must exist:
 
 - `ansible_private_key`: File containing the private key for ansible
 - `ansible_public_key`: File containing the public key for ansible
-- `nc_passwd`: Masked variable containing the Admin Password for your nextcloud user
-- `nc_db_password`: Masked variable containing the DB Password for your nextcloud
 - `hcloud_dns_token`: Masked variable containing a DNS API token for hetzner dns
 - `hcloud_token`: Masked variable containing an API token for Hetzner Cloud
 
-Then copy the files from this repository over to your new repository and edit the `settings.tfvars` as well as the `variables.yml` file to your likings.
+Then copy the files from this repository over to your new repository and edit the `settings.tfvars` as well as the `settings.yml` file to your likings.
+
+Note: For the `nc_passwd` and `nc_db_password` variable it's highly recommended to store them in an ansible-vault file instead of the settings.yml. Here's how you do that:
+
+```bash
+ansible-vault create secrets.yml
+```
+
+The command will prompt you for a Vault password and then open an editor where you can enter the secure variables. Once you save, the command will save that file in your directory but in an encrypted way. If you do that, don't forget to add the vault password as CD/CD variable of type file and the name `ansible_vault_password`.
 
 Once you commit your changes the pipeline should automatically trigger and build your NC instance.
 
@@ -60,7 +66,7 @@ Once you commit your changes the pipeline should automatically trigger and build
 
 There is always a way to improve:
 
-- [ ] Improve secrets management  
+- [x] Improve secrets management using ansible-vault  
 - [ ] Refine `config.json` and add more configuration values
 - [ ] Make sure ansible only imports the config when values have changed
 - [ ] Install nextcloud apps using a list variable
