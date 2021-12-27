@@ -66,6 +66,13 @@
     - { file: 'www.conf',     dest: '{{ php_www_conf_dir }}/www.conf' }
     - { file: 'php-fpm.conf', dest: '{{ php_fpm_conf_dir }}/php-fpm.conf' }
   notify: restart php-fpm
+- name: PHP upload tmp created
+  file:
+    path: "{{ php_upload_tmp }}" 
+    state: directory 
+    mode: 0770
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
 - name: Ensure php-fpm is enabled and running
   systemd:
     name: "{{ php_service_name }}"
