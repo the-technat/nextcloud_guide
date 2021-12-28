@@ -1,5 +1,6 @@
 ---
 fqdn: 'buffalo.technat.dev'
 nc_admin: 'technat' # Nextcloud Admin User
+staging_cert: 'true' # Cert from stating CA or prod CA?
 # nc_passwd: '' # Store this in an ansible-vault file
 # nc_db_password: '' # Store this in an ansible-vault file

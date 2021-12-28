@@ -6,10 +6,16 @@
     -  python3-certbot-nginx
     autoremove: true
     state: latest
-- name: let's encrypt certificates present
-  shell: "certbot certonly --nginx -m {{ cert_mail }} -d {{ fqdn }} --agree-tos"
+- name: let's encrypt stating certificates present
+  shell: "certbot certonly --non-interactive --nginx -m {{ cert_mail }} -d {{ fqdn }} --agree-tos --test-cert"
   args:
     creates: /etc/letsencrypt/live/{{ fqdn }}/cert.pem
+  when: staging_cert == "true"
+- name: let's encrypt prod certificates present
+  shell: "certbot certonly --non-interactive --nginx -m {{ cert_mail }} -d {{ fqdn }} --agree-tos"
+  args:
+    creates: /etc/letsencrypt/live/{{ fqdn }}/cert.pem
+  when: staging_cert == "false"
 - name: Cert renewal job is present
   cron:
     name: letsencrypt cert renewal
