@@ -1,4 +1,3 @@
-data_disk: '/dev/sdb' # Disk used for nextcloud data
 data_dir: '/data'
 ssh_port: 58222 # SSH Port configured in cloud_init
 http_port: 80 # HTTP Port to open on firewall

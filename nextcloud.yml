@@ -5,6 +5,11 @@
   become_user: root
   vars_files:
   - settings.yml
+  tasks:
+  - name: Wait for Cloud_Init to fully bootstrap the server 
+    wait_for:
+      port: "{{ ansible_ssh_port }}"
+      delay: 5 
   roles:
   - role: prep_os
   - role: fail2ban
