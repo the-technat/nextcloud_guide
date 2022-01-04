@@ -79,7 +79,8 @@ configure:
     - eval $(ssh-agent -s)
     - ssh-add "$ansible_private_key" 
   script:
-  - "curl -L --silent -o tf_output.json --header \"JOB-TOKEN: $CI_JOB_TOKEN\" \"https://code.immerda.ch/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_TITLE}/-/jobs/artifacts/${CI_COMMIT_BRANCH}/file/tf_output.json?job=apply\""
+  - "curl -L --silent -o tf_output.json --header \"JOB-TOKEN: $CI_JOB_TOKEN\" \"https://code.immerda.ch/api/v4/projects/${CI_PROJECT_ID}/jobs/$(((${CI_JOB_ID} - 1)))/artifacts/tf_output.json\""
+  - cat tf_output.json
   - ansible-playbook nextcloud.yml -v --vault-password-file=$ansible_vault_password -e "@secrets.yml" -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
   only:
   - master
