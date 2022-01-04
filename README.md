@@ -49,6 +49,7 @@ The following CI/CD variables must exist:
 - `ansible_public_key`: File containing the public key for ansible
 - `hcloud_dns_token`: Masked variable containing a DNS API token for hetzner dns
 - `hcloud_token`: Masked variable containing an API token for Hetzner Cloud
+- `pat_token`: Masked protected variable containing a Private Access Token. You can generate one in your account settings (currently this is the only options to download job artifacts)
 
 Then copy the files from this repository over to your new repository and edit the `settings.tfvars` as well as the `settings.yml` file to your likings.
 

@@ -35,5 +35,5 @@
           - "  PHP-FPM Socket: {{ php_fpm_sock }}"
           - "  Data Dir: {{ data_dir }}"
           - "  OS: {{ ansible_distribution }}"
-          - "  SSH-Port: {{ ssh_port }}"
+          - "  SSH-Port: {{ ansible_port }}"
           - "  Nextcloud Logs: {{ data_dir }}/nextcloud.log"
