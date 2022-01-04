@@ -39,7 +39,7 @@
 - name: Allow incoming SSH traffic
   ufw:
     rule: allow
-    port: "{{ ssh_port }}"
+    port: "{{ ansible_port }}"
 - name: UFW firewall enabled
   community.general.ufw:
     state: enabled

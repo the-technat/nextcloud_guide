@@ -1,5 +1,4 @@
 data_dir: '/data'
-ssh_port: 58222 # SSH Port configured in cloud_init
 http_port: 80 # HTTP Port to open on firewall
 https_port: 443 # HTTPS Port to open on firewall
 pesize: 16 # See https://docs.ansible.com/ansible/latest/collections/community/general/lvg_module.html#parameter-pesize
