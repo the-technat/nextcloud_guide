@@ -1,5 +1,5 @@
 php_version: '8.0'
 php_timezone:  'Australia/Currie' # UTC+00:00
-php_memory_limit: '256MB' 
+php_memory_limit: '512MB' 
 upload_max_filesize: '32GB'
 post_max_size: '32GB'
