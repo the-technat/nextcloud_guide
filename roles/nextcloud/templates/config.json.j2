@@ -4,11 +4,11 @@
     "memcache.locking": "\\OC\\Memcache\\Redis",
     "memcache.distributed": "\\OC\\Memcache\\Redis",
     "redis": {
-        "host": "\/var\/run\/redis\/redis.sock",
-        "port": 0,
-        "timeout": 1.5,
-        "password": '',
-        "dbindex": 0,
+        "host": "{{ redis_socket_path }}",
+        "port": "0",
+        "timeout": "1.5",
+        "password": "",
+        "dbindex": "0"
     },
     "trusted_domains": [
       "{{ fqdn }}"
