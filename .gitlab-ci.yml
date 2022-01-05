@@ -18,6 +18,7 @@ variables:
 cache:
   paths:
     - ${CI_PROJECT_DIR}/.terraform
+    - ${CI_PROJECT_DIR}/tf_output.json
 
 validate_terraform: 
   stage: prepare
@@ -49,10 +50,6 @@ apply:
   script:
   - gitlab-terraform apply 
   - gitlab-terraform output -no-color -json > tf_output.json
-  artifacts:
-    name: outputs
-    paths:
-    - ${CI_PROJECT_DIR}/tf_output.json
   only:
   - master
   allow_failure: false
@@ -79,7 +76,7 @@ configure:
     - eval $(ssh-agent -s)
     - ssh-add "$ansible_private_key" 
   script:
-  - "curl -L --silent -o tf_output.json --header \"Private-Token: ${pat_token}\" \"https://code.immerda.ch/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/${CI_COMMIT_BRANCH}/raw/tf_output.json?job=apply\""
+  - ls -lah
   - ansible-playbook nextcloud.yml -v --vault-password-file=$ansible_vault_password -e "@secrets.yml" -e ansible_ssh_port=$(cat tf_output.json|jq '.ansible_ssh_port.value') -e ansible_user=$(cat tf_output.json|jq '.ansible_user.value') 
   only:
   - master
