@@ -64,7 +64,7 @@
   lvol:
     vg: nc
     lv:  data
-    size: 1g
+    size: 100%FREE 
     force: yes
 - name: Mount directory exists
   file:
