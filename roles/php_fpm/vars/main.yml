@@ -1,4 +1,4 @@
-php_www_conf_dir: '/etc/php/{{ php_version}}/fpm/pool.d'
+php_pool_conf_dir: '/etc/php/{{ php_version}}/fpm/pool.d'
 php_cli_conf_dir: '/etc/php/{{ php_version}}/cli'
 php_fpm_conf_dir: '/etc/php/{{ php_version}}/fpm'
 php_service_name: 'php{{ php_version}}-fpm'

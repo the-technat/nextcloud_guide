@@ -1,1 +1,2 @@
 redis_conf_path: '/etc/redis'
+redis_socket_path: '/var/run/redis/redis-server.sock'

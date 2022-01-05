@@ -11,7 +11,7 @@
     enabled: true
     state: started
 - name: Redis config is present
-  copy:
+  template:
     src: redis.conf
     dest: "{{ redis_conf_path }}/redis.conf"
     owner: root
