@@ -32,17 +32,14 @@
       - libmagickcore-6.q16-6-extra 
     autoremove: true
     state: latest
-- name: Ensure php-fpm config and pool are present
+- name: nextcloud php-fpm pool present
   template:
-    src: "{{ item.file }}"
-    dest: "{{ item.dest }}"
+    src: "nextcloud_pool.conf"
+    dest: "{{ php_pool_conf_dir }}/nextcloud.conf"
     owner: root
     group: root
     mode: 0644
     force: true
-  with_items:
-    - { file: 'nextcloud_pool.conf',     dest: '{{ php_pool_conf_dir }}/nextcloud_pool.conf' }
-    - { file: 'php-fpm.conf', dest: '{{ php_fpm_conf_dir }}/php-fpm.conf' }
   notify: restart php-fpm
 - name: Default php-fpm pool removed
   file:
