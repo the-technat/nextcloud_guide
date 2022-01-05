@@ -1,6 +1,6 @@
 ---
-fqdn: 'cloud.technat.dev'
-nc_admin: 'wurm' # Nextcloud Admin User
+fqdn: 'cucumber.technat.dev'
+nc_admin: 'worm' # Nextcloud Admin User
 staging_cert: 'false' # Cert from stating CA or prod CA?
 # nc_passwd: '' # Store this in an ansible-vault file
 # nc_db_password: '' # Store this in an ansible-vault file
