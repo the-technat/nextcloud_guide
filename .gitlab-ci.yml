@@ -27,7 +27,7 @@ validate_terraform:
 
 validate_ansible:
   stage: prepare
-  image: docker.io/cytopia/ansible-lint:5
+  image: docker.io/cytopia/ansible-lint:6
   script:
     - ansible-lint -v --show-relpath --parseable-severity --nocolor nextcloud.yml 
 
